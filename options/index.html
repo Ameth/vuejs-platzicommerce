@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://unpkg.com/vue@3"></script>
     <link rel="stylesheet" href="style.css" />
-    <!-- <script src="main.js"></script> -->
     <title>PlatziCommerce</title>
   </head>
+
   <body>
     <div id="app">
       <header>
@@ -24,56 +24,19 @@
             :class="{'bg-gray': index & 1}"
           >
             <img :src="item.images[0].image" alt="" />
-            <span
-              >{{item.name}} - $ {{formatPrice(item.price)}}
-              ({{item.quantity}})</span
-            >
+            <span>
+              {{item.name}} - $ {{formatPrice(item.price)}} ({{item.quantity}})
+            </span>
           </div>
         </div>
       </header>
       <main>
-        <section class="product">
-          <div class="product__thumbnails">
-            <div
-              v-for="(image, index) in product.images"
-              :key="index"
-              class="thumb"
-              :class="{active: activeImage == index}"
-              :style="{backgroundImage: 'url(' + image.thumbnail + ')'}"
-              @click="activeImage = index"
-            ></div>
-          </div>
-          <div class="product__image">
-            <img :src="product.images[activeImage].image" :alt="product.name" />
-          </div>
-        </section>
-        <section class="description">
-          <h4>
-            {{product.name.toUpperCase()}} {{product.stock === 0 ? "😢" : "😎"}}
-          </h4>
-          <span class="badge new" v-if="product.new">Nuevo</span>
-          <span class="badge offer" v-if="product.offer">Oferta</span>
-          <p class="description__status" v-if="product.stock ==3">
-            Quedan pocas unidades
-          </p>
-          <p class="description__status" v-else-if="product.stock <=2">
-            El producto está por terminarse
-          </p>
-          <p class="description__status" v-else>Producto disponible</p>
-          <p class="description__price">${{formatPrice(product.price)}}</p>
-          <p class="description__content">{{product.content}}</p>
-          <div class="discount">
-            <span>Codigo de descuento:</span>
-            <input
-              type="text"
-              placeholder="Ingresa tu código"
-              @keyup.enter="aplicarDescuento($event)"
-            />
-          </div>
-          <button :disabled="product.stock==0" @click="addCart()">
-            Agregar al carrito
-          </button>
-        </section>
+        <Product
+          v-for="product in products"
+          :key="product.name"
+          :product="product"
+          @send-to-cart="addCart"
+        ></Product>
       </main>
     </div>
     <script>
@@ -82,59 +45,109 @@
       const app = createApp({
         data() {
           return {
-            product: {
-              name: "Camara",
-              price: 450_000,
-              stock: 10,
-              content: `Camara de fotografia EPSON LX750`,
-              images: [
-                {
-                  image: "./images/camara.jpg",
-                  thumbnail: "./images/camara-thumb.jpg",
-                },
-                {
-                  image: "./images/camara-2.jpg",
-                  thumbnail: "./images/camara-2-thumb.jpg",
-                },
-              ],
-              new: true,
-              offer: false,
-              quantity: 1,
-            },
-            activeImage: 0,
+            products: [
+              {
+                name: "Camara EPSON",
+                price: 450_000,
+                stock: 10,
+                content: `Camara de fotografia EPSON LX750`,
+                images: [
+                  {
+                    image: "./images/camara.jpg",
+                    thumbnail: "./images/camara-thumb.jpg",
+                  },
+                  {
+                    image: "./images/camara-2.jpg",
+                    thumbnail: "./images/camara-2-thumb.jpg",
+                  },
+                ],
+                new: true,
+                offer: false,
+                quantity: 1,
+              },
+              {
+                name: "Camara PTZ",
+                price: 570_000,
+                stock: 10,
+                content: `Camara de vigilancia PTZ LX750`,
+                images: [
+                  {
+                    image: "./images/camara.jpg",
+                    thumbnail: "./images/camara-thumb.jpg",
+                  },
+                  {
+                    image: "./images/camara-2.jpg",
+                    thumbnail: "./images/camara-2-thumb.jpg",
+                  },
+                ],
+                new: true,
+                offer: false,
+                quantity: 1,
+              },
+              {
+                name: "Camara NIKON",
+                price: 200_000,
+                stock: 10,
+                content: `Camara de fotografia NIKON LX750`,
+                images: [
+                  {
+                    image: "./images/camara.jpg",
+                    thumbnail: "./images/camara-thumb.jpg",
+                  },
+                  {
+                    image: "./images/camara-2.jpg",
+                    thumbnail: "./images/camara-2-thumb.jpg",
+                  },
+                ],
+                new: true,
+                offer: true,
+                quantity: 1,
+              },
+              {
+                name: "Camara NIKON 2",
+                price: 340_000,
+                stock: 10,
+                content: `Camara de fotografia NIKON LX750`,
+                images: [
+                  {
+                    image: "./images/camara.jpg",
+                    thumbnail: "./images/camara-thumb.jpg",
+                  },
+                  {
+                    image: "./images/camara-2.jpg",
+                    thumbnail: "./images/camara-2-thumb.jpg",
+                  },
+                ],
+                new: true,
+                offer: true,
+                quantity: 1,
+              },
+            ],
             cartOpen: false,
             cart: [],
-            discountCodes: ["AGOE2022", "Asdf1234", "TRni1234"],
           };
         },
         methods: {
           formatPrice(value) {
             return Intl.NumberFormat("es-CO").format(value);
           },
-          aplicarDescuento(event) {
-            // console.log(event.target.value);
-            const cod = event.target.value;
-            const discountCodeIndex = this.discountCodes.indexOf(cod);
-            // console.log(discountCodeIndex);
-            if (discountCodeIndex >= 0) {
-              this.product.price *= 50 / 100;
-              this.discountCodes.splice(discountCodeIndex, 1);
-            }
-          },
-          addCart() {
+          addCart(product) {
             const prodIndex = this.cart.findIndex(
-              (item) => item.name == this.product.name
+              (prod) => prod.name == product.name
             );
             if (prodIndex == -1) {
-              this.cart.push(this.product);
+              this.cart.push(product);
             } else {
               this.cart[prodIndex].quantity++;
             }
-            this.product.stock -= 1;
+            product.stock -= 1;
           },
         },
       });
-
+    </script>
+    <script src="Badge.js"></script>
+    <script src="Product.js"></script>
+    <script>
       app.mount("#app");
     </script>
   </body>
