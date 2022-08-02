@@ -46,8 +46,8 @@ app.component('Product', {
   data () {
     return {
       activeImage: 0,
-      discountCodes: ['AGOE2022', 'Asdf1234', 'TRni1234'],
-      price_color: 'rgb(104,104,209)'
+      discountCodes: ['AGOE2022', 'Asdf1234', 'TRni1234']
+      // price_color: 'rgb(104,104,209)'
     }
   },
   methods: {
@@ -71,10 +71,17 @@ app.component('Product', {
   watch: {
     activeImage (newValue, oldValue) {
       // console.log(newValue, oldValue)
-    },
-    'product.stock' (stock) {
-      if (stock <= 1) {
-        this.price_color = 'rgb(100,30,67)'
+    }
+    // 'product.stock' (stock) {
+    //   if (stock <= 1) {
+    //     this.price_color = 'rgb(100,30,67)'
+    //   }
+    // }
+  },
+  computed: {
+    price_color () {
+      if (this.product.stock <= 1) {
+        return 'rgb(100,30,67)'
       }
     }
   }

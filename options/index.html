@@ -125,7 +125,7 @@
               },
             ],
             cartOpen: false,
-            totalCarrito: 0,
+            // totalCarrito: 0,
             cart: [],
           };
         },
@@ -146,13 +146,20 @@
           },
         },
         watch: {
-          cart: {
-            handler(newValue, oldValue) {
-              this.totalCarrito = newValue.reduce((sum, item) => {
-                return item.price * item.quantity + sum;
-              }, 0);
-            },
-            deep: true,
+          // cart: {
+          //   handler(newValue, oldValue) {
+          //     this.totalCarrito = newValue.reduce((sum, item) => {
+          //       return item.price * item.quantity + sum;
+          //     }, 0);
+          //   },
+          //   deep: true,
+          // },
+        },
+        computed: {
+          totalCarrito() {
+            return this.cart.reduce((sum, item) => {
+              return item.price * item.quantity + sum;
+            }, 0);
           },
         },
       });

@@ -42,11 +42,6 @@ app.component('Product', {
           </button>
         </section>
     `,
-  // props: {
-  //   product: {
-  //     type: Object
-  //   }
-  // },
   props: ['product'],
   emits: ['sendToCart'],
   setup (props, { emit }) {
@@ -57,7 +52,7 @@ app.component('Product', {
     }
 
     const activeImage = ref(0)
-    const price_color = ref('rgb(104,104,209)')
+    // const price_color = ref('rgb(104,104,209)')
 
     const discountCodes = ['AGOE2022', 'Asdf1234', 'TRni1234']
 
@@ -76,14 +71,20 @@ app.component('Product', {
       emit('sendToCart', props.product)
     }
 
-    watch(
-      () => props.product.stock,
-      stock => {
-        if (stock <= 1) {
-          price_color.value = 'rgb(100,30,67)'
-        }
+    // watch(
+    //   () => props.product.stock,
+    //   stock => {
+    //     if (stock <= 1) {
+    //       price_color.value = 'rgb(100,30,67)'
+    //     }
+    //   }
+    // )
+
+    const price_color = computed(() => {
+      if (props.product.stock <= 1) {
+        return 'rgb(100,30,67)'
       }
-    )
+    })
 
     return {
       activeImage,

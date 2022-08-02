@@ -42,7 +42,7 @@
       </main>
     </div>
     <script>
-      const { createApp, ref, reactive, watch } = Vue;
+      const { createApp, ref, reactive, watch, computed } = Vue;
 
       const app = createApp({
         setup() {
@@ -127,7 +127,7 @@
 
           const cartOpen = ref(false);
           const cart = ref([]);
-          const totalCarrito = ref(0);
+          // const totalCarrito = ref(0);
 
           const formatPrice = (value) => {
             return Intl.NumberFormat("es-CO").format(value);
@@ -145,15 +145,21 @@
             product.stock -= 1;
           };
 
-          watch(
-            cart,
-            (newValue) => {
-              totalCarrito.value = newValue.reduce((sum, item) => {
-                return item.price * item.quantity + sum;
-              }, 0);
-            },
-            { deep: true }
-          );
+          // watch(
+          //   cart,
+          //   (newValue) => {
+          //     totalCarrito.value = newValue.reduce((sum, item) => {
+          //       return item.price * item.quantity + sum;
+          //     }, 0);
+          //   },
+          //   { deep: true }
+          // );
+
+          const totalCarrito = computed(() => {
+            return cart.value.reduce((sum, item) => {
+              return item.price * item.quantity + sum;
+            }, 0);
+          });
 
           return {
             products,
