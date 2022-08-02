@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Camara EPSON",
-      "price": 450_000,
+      "price": 450000,
       "stock": 10,
       "content": "Camara de fotografia EPSON LX750",
       "images": [
@@ -23,7 +23,7 @@
     {
       "id": 2,
       "name": "Camara PTZ",
-      "price": 570_000,
+      "price": 570000,
       "stock": 10,
       "content": "Camara de vigilancia PTZ LX750",
       "images": [
@@ -43,7 +43,7 @@
     {
       "id": 3,
       "name": "Camara NIKON",
-      "price": 200_000,
+      "price": 200000,
       "stock": 10,
       "content": "Camara de fotografia NIKON LX750",
       "images": [
@@ -63,7 +63,7 @@
     {
       "id": 4,
       "name": "Camara NIKON 2",
-      "price": 340_000,
+      "price": 340000,
       "stock": 10,
       "content": "Camara de fotografia NIKON LX750",
       "images": [
