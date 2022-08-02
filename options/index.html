@@ -32,8 +32,10 @@
         </div>
       </header>
       <main>
+        Buscar:
+        <input type="text" placeholder="Buscar..." v-model="search" />
         <Product
-          v-for="product in products"
+          v-for="product in productsFiltered"
           :key="product.name"
           :product="product"
           @send-to-cart="addCart"
@@ -50,6 +52,7 @@
             cartOpen: false,
             // totalCarrito: 0,
             cart: [],
+            search: "",
           };
         },
         methods: {
@@ -84,9 +87,27 @@
               return item.price * item.quantity + sum;
             }, 0);
           },
+          productsFiltered() {
+            if (this.search != "") {
+              return this.products.filter(
+                (prod) => prod.name.toLowerCase() == this.search.toLowerCase()
+              );
+            } else {
+              return this.products;
+            }
+          },
         },
-        created() {
-          console.log("created");
+        async created() {
+          try {
+            const res = await fetch(
+              "https://my-json-server.typicode.com/Ameth/vuejs-platzicommerce/db"
+            );
+            const data = await res.json();
+            // console.log(data);
+            this.products = data.products;
+          } catch (error) {
+            console.log("No se pudo conectar a la API", error);
+          }
         },
       });
     </script>
