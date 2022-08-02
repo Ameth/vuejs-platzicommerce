@@ -27,7 +27,7 @@ app.component('Product', {
       El producto está por terminarse
     </p>
     <p class="description__status" v-else>Producto disponible</p>
-    <p class="description__price">$ {{formatPrice(product.price)}}</p>
+    <p class="description__price" :style="{color:price_color}">$ {{formatPrice(product.price)}}</p>
     <p class="description__content">{{product.content}}</p>
     <div class="discount">
       <span>Codigo de descuento:</span>
@@ -46,7 +46,8 @@ app.component('Product', {
   data () {
     return {
       activeImage: 0,
-      discountCodes: ['AGOE2022', 'Asdf1234', 'TRni1234']
+      discountCodes: ['AGOE2022', 'Asdf1234', 'TRni1234'],
+      price_color: 'rgb(104,104,209)'
     }
   },
   methods: {
@@ -65,6 +66,16 @@ app.component('Product', {
     },
     sendToCart () {
       this.$emit('sendToCart', this.product)
+    }
+  },
+  watch: {
+    activeImage (newValue, oldValue) {
+      // console.log(newValue, oldValue)
+    },
+    'product.stock' (stock) {
+      if (stock <= 1) {
+        this.price_color = 'rgb(100,30,67)'
+      }
     }
   }
 })

@@ -29,6 +29,7 @@
               ({{item.quantity}})</span
             >
           </div>
+          <p>Total: ${{formatPrice(totalCarrito)}}</p>
         </div>
       </header>
       <main>
@@ -41,7 +42,7 @@
       </main>
     </div>
     <script>
-      const { createApp, ref, reactive } = Vue;
+      const { createApp, ref, reactive, watch } = Vue;
 
       const app = createApp({
         setup() {
@@ -126,6 +127,7 @@
 
           const cartOpen = ref(false);
           const cart = ref([]);
+          const totalCarrito = ref(0);
 
           const formatPrice = (value) => {
             return Intl.NumberFormat("es-CO").format(value);
@@ -143,8 +145,19 @@
             product.stock -= 1;
           };
 
+          watch(
+            cart,
+            (newValue) => {
+              totalCarrito.value = newValue.reduce((sum, item) => {
+                return item.price * item.quantity + sum;
+              }, 0);
+            },
+            { deep: true }
+          );
+
           return {
             products,
+            totalCarrito,
             cartOpen,
             cart,
             formatPrice,

@@ -28,6 +28,7 @@
               {{item.name}} - $ {{formatPrice(item.price)}} ({{item.quantity}})
             </span>
           </div>
+          <p>Total: ${{formatPrice(totalCarrito)}}</p>
         </div>
       </header>
       <main>
@@ -124,6 +125,7 @@
               },
             ],
             cartOpen: false,
+            totalCarrito: 0,
             cart: [],
           };
         },
@@ -141,6 +143,16 @@
               this.cart[prodIndex].quantity++;
             }
             product.stock -= 1;
+          },
+        },
+        watch: {
+          cart: {
+            handler(newValue, oldValue) {
+              this.totalCarrito = newValue.reduce((sum, item) => {
+                return item.price * item.quantity + sum;
+              }, 0);
+            },
+            deep: true,
           },
         },
       });

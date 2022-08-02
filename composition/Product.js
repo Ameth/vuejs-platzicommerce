@@ -27,7 +27,7 @@ app.component('Product', {
             El producto está por terminarse
           </p>
           <p class="description__status" v-else>Producto disponible</p>
-          <p class="description__price">$ {{formatPrice(product.price)}}</p>
+          <p class="description__price" :style="{color:price_color}">$ {{formatPrice(product.price)}}</p>
           <p class="description__content">{{product.content}}</p>
           <div class="discount">
             <span>Codigo de descuento:</span>
@@ -57,6 +57,7 @@ app.component('Product', {
     }
 
     const activeImage = ref(0)
+    const price_color = ref('rgb(104,104,209)')
 
     const discountCodes = ['AGOE2022', 'Asdf1234', 'TRni1234']
 
@@ -75,8 +76,18 @@ app.component('Product', {
       emit('sendToCart', props.product)
     }
 
+    watch(
+      () => props.product.stock,
+      stock => {
+        if (stock <= 1) {
+          price_color.value = 'rgb(100,30,67)'
+        }
+      }
+    )
+
     return {
       activeImage,
+      price_color,
       // product,
       formatPrice,
       aplicarDescuento,
